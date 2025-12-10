@@ -27,6 +27,7 @@ export async function PUT(req: Request) {
     data: {
       name: body.name,
       email: body.email,
+      age: body.age ?? null,
     },
   });
 
