@@ -58,3 +58,32 @@ export async function DELETE(req: Request) {
 
   return Response.json({ message: "User deleted" });
 }
+// add Get user by id
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const segments = url.pathname.split("/");
+  const last = segments[segments.length - 1];
+  const id = Number(last);
+  if (Number.isNaN(id)) {
+    return new Response(
+      JSON.stringify({
+        message: "Paramètre id invalide", 
+        path: url.pathname,
+        lastSegment: last,
+      }),
+      { status: 400 }
+    );
+  }
+  const user = await prisma.user.findUnique({
+    where: { id },
+  }); 
+  if (!user) {
+    return new Response(
+      JSON.stringify({
+        message: "User non trouvé",
+      }),
+      { status: 404 }
+    );
+  }
+  return Response.json(user);
+}
